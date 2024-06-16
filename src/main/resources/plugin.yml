@@ -2,7 +2,6 @@ name: GraphicalAuth
 main: net.gamedoctor.graphicalauth.GraphicalAuth
 version: "1.0"
 api-version: "1.16"
-load: STARTUP
 author: _GameDoctor_
 description: "Enter the game by drawing!"
 website: vk.com/ep_pkp
