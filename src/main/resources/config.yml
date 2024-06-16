@@ -1,0 +1,252 @@
+#############################
+#       GraphicalAuth       #
+#     Made by GameDoctor    #
+#           2024            #
+#############################
+
+# All instructions for using and configuring the plugin are provided on SpigotMC:
+# https://www.spigotmc.org/members/gamedoctor.792259
+
+settings: # General settings
+  # The prefix of all messages in the chat. You can make it empty
+  messagesPrefix: "&fGraphicalAuth &e> "
+  # Minimum length of the combination
+  minPswdLength: 3
+  # The maximum length of the combination
+  maxPswdLength: 54
+  # Maximum authorization/registration time in seconds
+  maxAuthTime: 60
+  # If true, authorization will be requested only when the IP address is changed, and if false - every time you log in
+  authOnlyOnIPChange: true
+  # If true, the player will be teleported to the specified location before each authorization/registration
+  spawn:
+    enable: false
+    world: world
+    x: 1
+    y: 1
+    z: 1
+    yaw: 1
+    pitch: 1
+  # If true, the player will be teleported to the specified location immediately after authorization/registration
+  afterAuthTP:
+    enable: false
+    world: world
+    x: 1
+    y: 1
+    z: 1
+    yaw: 1
+    pitch: 1
+  # Time format
+  timeStringFormat:
+    # If true, only the largest is displayed. For example, not 1 d. 12 h. 5 m. 13 s., but just 1 d.
+    displayOnlyHighest: true
+    seconds: "s."
+    minutes: "m."
+    hours: "h."
+    days: "d."
+
+database: # Database settings
+  # Available types: FILE, MYSQL, SQLITE
+  type: SQLITE
+  # It is specified without a format. Used for FILE (.yml) and SQLITE (.db)
+  fileName: "database"
+  # The name of the table with the players. Used for FILE, MYSQL, and SQLITE types
+  playersTableName: "ga_players"
+  # The name of the database. Only for MYSQL
+  databaseName: "graphicalauth"
+  # The host. Only for MYSQL
+  host: "localhost"
+  # User. Only for MYSQL
+  user: "root"
+  # Password. Only for MYSQL
+  password: "-"
+  # Additional connection parameters. Change it if you know what it's for. Only for MYSQL
+  arguments: "?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false"
+
+standaloneServer: # Use it if GraphicalAuth is installed on a separate server
+  enable: false
+  # The server to which the player will be redirected upon successful authorization (BungeeCord)
+  server: "lobby"
+  # If false, even after successful authorization, the player will not be able to interact with the world before exiting the authorization server
+  allowToInteract: false
+
+gui: # Menu settings for authorization, registration and combination changes
+  # The name of the menu with authorization
+  title_login: "&a&lSpecify your combination"
+  # The name of the menu with registration
+  title_register: "&c&lCome up with a combination"
+  # The name of the menu with a change in the combination
+  title_changing: "&6&lCome up with a new combination"
+  # The painted object
+  checked_item:
+    name: "&c"
+    # Makes the item shimmer
+    glowing: false
+    material: "GREEN_WOOL"
+  # An unpainted object
+  unchecked_item:
+    name: "&c"
+    material: "RED_WOOL"
+  # The bottom of any menu
+  footer:
+    name: "&c"
+    material: "GRAY_STAINED_GLASS_PANE"
+  # An item that appears during data processing
+  loading:
+    name: "&6Processing..."
+    material: "CLOCK"
+  # An item with registration information
+  info_register:
+    name: "&bRegistration"
+    lore:
+      - "&7You need to come up with a drawing,"
+      - "&7by entering which you will perform"
+      - "&7log in to your account."
+      - "&cTime left: &e%timeLeft%"
+    slot: 53
+    material: "BOOK"
+  # An item with information about changing the combination
+  info_changing:
+    name: "&bChanging the combination"
+    lore:
+      - "&7You need to come up with a drawing,"
+      - "&7by entering which one you will perform"
+      - "&7log in to your account."
+    slot: 53
+    material: "BOOK"
+  # An item with authorization information
+  info_login:
+    name: "&bAuthorization"
+    lore:
+      - "&7Fill in the required blocks,"
+      - "&7to log in to your account."
+      - "&cTime left: &e%timeLeft%"
+    slot: 53
+    material: "BOOK"
+  # An item with a combination length error
+  apply_fail_passwordLength:
+    name: "&c&lError"
+    lore:
+      - "&cThe combination should not be"
+      - "&clonger than &e%max% &cor shorter &e%min%"
+    material: "BARRIER"
+  # An item with registration confirmation
+  apply_register:
+    name: "&aRegister"
+    lore:
+      - "&cMake sure you can"
+      - "&c&nremember&c the specified combination."
+    material: "GREEN_STAINED_GLASS_PANE"
+  # An item with authorization confirmation
+  apply_login:
+    name: "&aLog in"
+    material: "GREEN_STAINED_GLASS_PANE"
+  # An item with confirmation of a combination change
+  apply_change:
+    name: "&6Change"
+    material: "ORANGE_STAINED_GLASS_PANE"
+  # An item with an exit from the game
+  exit:
+    name: "&cExit"
+    slot: 45
+    material: "BARRIER"
+
+command: # Settings of the main command /gauth
+  change: # The name of the subcommand. Do not change
+    # The right to use a subcommand. Set to '-' if not required
+    usePermission: "-"
+  unregister: # The name of the subcommand. Do not change
+    # The right to use a subcommand. Set to '-' if not required
+    usePermission: "-"
+  admin: # The name of the subcommand. Do not change
+    # The right to use a subcommand. Set to '-' if not required
+    usePermission: "graphicalauth.admin.use"
+
+kick: # Message settings when you are excluded from the game
+  # Exclusion from the game in case of an incorrectly specified combination
+  incorrectPassword:
+    - "&cYou have entered the wrong combination!"
+    - " "
+    - "&bContact the Administration for recovery"
+  # Exclusion from the game when clicking on the exit item
+  exit:
+    - "&cAuthorization cancelled"
+  # Exclusion from the game when the player does not have time to enter
+  timeLeft:
+    - "&cYou didn't have time to log in"
+
+messages: # Message Settings
+  success_auth:
+    chat:
+      enable: true
+      lines:
+        - "&aYou have successfully logged in!"
+    title:
+      enable: true
+      line1: "&aWelcome back,"
+      line2: "&c%player%"
+      fadeIn: 20 # 1 sec
+      stay: 60 # 3 sec
+      fadeOut: 20 # 1 sec
+    sound: # Take the names of the sounds from the site https://www.spigotmc.org/wiki/cc-sounds-list
+      enable: true
+      name: "ENTITY_PLAYER_LEVELUP"
+    broadcast:
+      enable: false
+      lines:
+        - "&7Player &e%player% &7turned to us!"
+  success_register:
+    chat:
+      enable: true
+      lines:
+        - "&aYou have successfully registered!"
+    title:
+      enable: true
+      line1: "&aWelcome,"
+      line2: "&c%player%"
+      fadeIn: 20 # 1 sec
+      stay: 60 # 3 sec
+      fadeOut: 20 # 1 sec
+    sound: # Take the names of the sounds from the site https://www.spigotmc.org/wiki/cc-sounds-list
+      enable: true
+      name: "ENTITY_PLAYER_LEVELUP"
+    broadcast:
+      enable: false
+      lines:
+        - "&7Player &e%player% &7joined us!"
+  success_changed:
+    chat:
+      enable: true
+      lines:
+        - "&aYou have successfully changed your combination!"
+    sound: # Take the names of the sounds from the site https://www.spigotmc.org/wiki/cc-sounds-list
+      enable: true
+      name: "ENTITY_PLAYER_LEVELUP"
+  cmdNoPerm:
+    chat:
+      enable: true
+      lines:
+        - "&cYou don't have enough rights"
+    sound:
+      enable: true
+      name: "ENTITY_ITEM_BREAK"
+  cmdHelp:
+    chat:
+      enable: true
+      lines:
+        - "&e------------ &aGraphicalAuth &e------------"
+        - "&a/%cmd% &7unregister&f: Remove registration from your account"
+        - "&a/%cmd% &7change&f: Change your combination"
+        - "&a/%cmd% &7admin&f: Account Management"
+  cmdAdminHelp:
+    chat:
+      enable: true
+      lines:
+        - "&e------------ &aGraphicalAuth &e------------"
+        - "&a/%cmd% &7unregister <name>&f: Remove registration from account"
+        - "&a/%cmd% &7unlogin <name>&f: Remove authorization from account"
+  cmdSuccess:
+    chat:
+      enable: true
+      lines:
+        - "&aSuccessfully"

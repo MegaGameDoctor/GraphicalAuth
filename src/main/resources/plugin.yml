@@ -1,0 +1,16 @@
+name: GraphicalAuth
+main: net.gamedoctor.graphicalauth.GraphicalAuth
+version: "1.0"
+api-version: "1.16"
+load: STARTUP
+author: _GameDoctor_
+description: "GraphicalAuth"
+website: vk.com/ep_pkp
+softdepend: [ PlaceholderAPI ]
+
+commands:
+  graphicalauth:
+    description: Main GraphicalAuth Command
+    aliases:
+      - gauth
+    usage: /<command>
