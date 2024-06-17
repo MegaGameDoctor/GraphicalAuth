@@ -12,9 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.mindrot.BCrypt;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,22 +57,11 @@ public class Utils {
     }
 
     public String hash(String msg) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(msg.getBytes());
-            for (byte b : hash) {
-                if ((0xFF & b) < 16) {
-                    sb.append("0").append(Integer.toHexString(0xFF & b));
-                } else {
-                    sb.append(Integer.toHexString(0xFF & b));
-                }
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return BCrypt.hashpw(msg, BCrypt.gensalt());
+    }
+
+    public boolean isHashValid(String hash, String original) {
+        return BCrypt.checkpw(original, hash);
     }
 
     public void connectBungeeCordServer(Player player, String server) {

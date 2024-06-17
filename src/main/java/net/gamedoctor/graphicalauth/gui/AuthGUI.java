@@ -61,7 +61,7 @@ public class AuthGUI {
         } else if (state.equals(State.REGISTER)) {
             inventory.setItem(cfg.getGui_info_register().getSlot(), cfg.getGui_info_register().getItemStack());
         } else if (state.equals(State.CHANGING)) {
-            inventory.setItem(cfg.getGui_info_changing().getSlot(), cfg.getGui_info_register().getItemStack());
+            inventory.setItem(cfg.getGui_info_changing().getSlot(), cfg.getGui_info_changing().getItemStack());
         }
 
         setUpFailedApplyItem(cfg.getGui_apply_fail_passwordLength());
@@ -144,13 +144,12 @@ public class AuthGUI {
                 State originalState = state;
                 state = State.LOADING;
                 String playerName = player.getName();
-
-                if (originalState.equals(State.LOGIN)) {
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-                        @Override
-                        public void run() {
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (originalState.equals(State.LOGIN)) {
                             if (checkPassword()) {
-                                plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots());
+                                plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots(true));
                                 cfg.getMessage_success_auth().display(player);
                                 plugin.executeAfterAuth(player);
                                 new BukkitRunnable() {
@@ -173,22 +172,30 @@ public class AuthGUI {
                                     player.closeInventory();
                                 }
                             }.runTask(plugin);
+                        } else if (originalState.equals(State.REGISTER)) {
+                            plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots(true));
+                            plugin.getPlayersInAuth().remove(player.getName());
+                            cfg.getMessage_success_register().display(player);
+                            plugin.executeAfterAuth(player);
+                            new BukkitRunnable() {
+                                public void run() {
+                                    player.closeInventory();
+                                    Bukkit.getPluginManager().callEvent(new PlayerAuthEvent(player, AuthState.REGISTERED));
+                                }
+                            }.runTask(plugin);
+                        } else if (originalState.equals(State.CHANGING)) {
+                            plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots(true));
+                            plugin.getPlayersInAuth().remove(player.getName());
+                            cfg.getMessage_success_changed().display(player);
+                            new BukkitRunnable() {
+                                public void run() {
+                                    player.closeInventory();
+                                    Bukkit.getPluginManager().callEvent(new PlayerAuthEvent(player, AuthState.CHANGED));
+                                }
+                            }.runTask(plugin);
                         }
-                    });
-                } else if (originalState.equals(State.REGISTER)) {
-                    plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots());
-                    plugin.getPlayersInAuth().remove(player.getName());
-                    player.closeInventory();
-                    cfg.getMessage_success_register().display(player);
-                    plugin.executeAfterAuth(player);
-                    Bukkit.getPluginManager().callEvent(new PlayerAuthEvent(player, AuthState.REGISTERED));
-                } else if (originalState.equals(State.CHANGING)) {
-                    plugin.getDatabaseManager().updateOrCreatePlayerAsync(player.getName(), player.getAddress().getAddress().getHostAddress(), getHashedSlots());
-                    plugin.getPlayersInAuth().remove(player.getName());
-                    player.closeInventory();
-                    cfg.getMessage_success_changed().display(player);
-                    Bukkit.getPluginManager().callEvent(new PlayerAuthEvent(player, AuthState.CHANGED));
-                }
+                    }
+                });
             } else if (slot == plugin.getCfg().getGui_exit().getSlot()) {
                 if (state.equals(State.CHANGING)) {
                     plugin.getPlayersInAuth().remove(player.getName()).player.closeInventory();
@@ -210,7 +217,7 @@ public class AuthGUI {
         player.updateInventory();
     }
 
-    private String getHashedSlots() {
+    private String getHashedSlots(boolean encode) {
         Collections.sort(attachedSlots);
 
         StringBuilder builder = new StringBuilder();
@@ -218,11 +225,15 @@ public class AuthGUI {
             builder.append(attachedSlot).append(",");
         }
 
-        return plugin.getUtils().hash(builder.toString());
+        if (encode) {
+            return plugin.getUtils().hash(builder.toString());
+        } else {
+            return builder.toString();
+        }
     }
 
     private boolean checkPassword() {
-        return getHashedSlots().equals(plugin.getDatabaseManager().getDbManager().getPlayerHash(player.getName()));
+        return plugin.getUtils().isHashValid(plugin.getDatabaseManager().getDbManager().getPlayerHash(player.getName()), getHashedSlots(false));
     }
 
     public int getPasswordLength() {
