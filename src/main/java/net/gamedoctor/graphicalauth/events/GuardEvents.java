@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.*;
@@ -44,6 +46,22 @@ public class GuardEvents implements Listener {
     public void onBreak(BlockBreakEvent e) {
         if (plugin.checkInteract(e.getPlayer()))
             e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player p) {
+            if (plugin.checkInteract(p))
+                e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDamageOther(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player p) {
+            if (plugin.checkInteract(p))
+                e.setCancelled(true);
+        }
     }
 
     @EventHandler
