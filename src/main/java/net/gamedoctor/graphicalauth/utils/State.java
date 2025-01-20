@@ -5,5 +5,6 @@ public enum State {
     REGISTER,
     LOADING,
     CHANGING,
-    COMPLETED
+    COMPLETED,
+    ABORTED_PLAYER_NAME
 }

@@ -38,7 +38,7 @@ public class SQLiteDBManager implements DBManager {
 
     public State getNeededState(Player player) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + playersTableName + " WHERE player=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + playersTableName + " WHERE LOWER(player) = LOWER(?)");
             preparedStatement.setString(1, player.getName());
             ResultSet set = preparedStatement.executeQuery();
             if (set.next()) {
@@ -51,6 +51,8 @@ public class SQLiteDBManager implements DBManager {
 
                 if (set.getString("hash").equals("-")) {
                     return State.REGISTER;
+                } else if (!set.getString("player").equals(player.getName())) {
+                    return State.ABORTED_PLAYER_NAME;
                 } else if (address.equals(set.getString("ip"))) {
                     return State.COMPLETED;
                 } else {

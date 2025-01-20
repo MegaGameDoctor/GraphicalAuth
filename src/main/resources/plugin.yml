@@ -1,6 +1,6 @@
 name: GraphicalAuth
 main: net.gamedoctor.graphicalauth.GraphicalAuth
-version: "1.2"
+version: "1.3"
 api-version: "1.16"
 author: _GameDoctor_
 description: "Enter the game by drawing!"

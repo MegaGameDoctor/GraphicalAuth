@@ -37,6 +37,7 @@ public class Config {
     private final String kick_incorrectPassword;
     private final String kick_exit;
     private final String kick_timeLeft;
+    private final String kick_incorrectName;
 
     private final int minPswdLength;
     private final int maxPswdLength;
@@ -109,6 +110,12 @@ public class Config {
             kick_timeLeft.append(utils.color(line)).append("\n");
         }
         this.kick_timeLeft = kick_timeLeft.toString();
+
+        StringBuilder kick_incorrectName = new StringBuilder();
+        for (String line : cfg.getStringList("kick.incorrectName")) {
+            kick_incorrectName.append(utils.color(line)).append("\n");
+        }
+        this.kick_incorrectName = kick_incorrectName.toString();
 
         message_success_auth = new Message(plugin, "success_auth");
         message_success_register = new Message(plugin, "success_register");

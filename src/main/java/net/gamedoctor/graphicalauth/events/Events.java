@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 public class Events implements Listener {
@@ -24,7 +25,13 @@ public class Events implements Listener {
             @Override
             public void run() {
                 State state = plugin.getDatabaseManager().getNeededState(player);
-                if (!state.equals(State.COMPLETED)) {
+                if (state.equals(State.ABORTED_PLAYER_NAME)) {
+                    new BukkitRunnable() {
+                        public void run() {
+                            player.kickPlayer(plugin.getCfg().getKick_incorrectName().replace("%player%", player.getName()));
+                        }
+                    }.runTask(plugin);
+                } else if (!state.equals(State.COMPLETED)) {
                     plugin.executePreAuth(player);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                         @Override
