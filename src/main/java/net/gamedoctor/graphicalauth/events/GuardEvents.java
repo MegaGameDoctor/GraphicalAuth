@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.gamedoctor.graphicalauth.GraphicalAuth;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -64,7 +65,9 @@ public class GuardEvents implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(
+            priority = EventPriority.HIGHEST
+    )
     public void onDisableCommands(PlayerCommandPreprocessEvent e) {
         if (plugin.checkInteract(e.getPlayer()))
             e.setCancelled(true);
@@ -76,7 +79,9 @@ public class GuardEvents implements Listener {
             e.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(
+            priority = EventPriority.HIGHEST
+    )
     public void onChat(AsyncPlayerChatEvent e) {
         if (plugin.checkInteract(e.getPlayer()))
             e.setCancelled(true);

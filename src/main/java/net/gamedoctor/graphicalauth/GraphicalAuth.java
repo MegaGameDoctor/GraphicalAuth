@@ -1,6 +1,7 @@
 package net.gamedoctor.graphicalauth;
 
 import lombok.Getter;
+import net.gamedoctor.graphicalauth.api.GraphicalAuthAPI;
 import net.gamedoctor.graphicalauth.commands.GraphicalAuthCommand;
 import net.gamedoctor.graphicalauth.config.Config;
 import net.gamedoctor.graphicalauth.database.DatabaseManager;
@@ -19,6 +20,8 @@ import java.util.logging.Level;
 
 @Getter
 public class GraphicalAuth extends JavaPlugin {
+    @Getter
+    private static GraphicalAuthAPI graphicalAuthAPI;
     private final HashMap<String, AuthGUI> playersInAuth = new HashMap<>();
     private Utils utils;
     private Config cfg;
@@ -60,6 +63,8 @@ public class GraphicalAuth extends JavaPlugin {
                 }
             }
         }, 20L, 20L);
+
+        graphicalAuthAPI = new GraphicalAuthAPI(this);
 
         this.getLogger().log(Level.INFO, "Fully completed! (" + (System.currentTimeMillis() - start) + " ms)");
 
