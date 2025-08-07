@@ -74,7 +74,7 @@ public class MySQLDBManager implements DBManager {
     public void updateOrCreatePlayer(String player, String ip, String hash) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + playersTableName + " (`player`, `ip`, `hash`) VALUES (?, ?, ?) " +
-                    "ON CONFLICT(player) DO UPDATE SET ip=excluded.ip, hash=excluded.hash WHERE player=excluded.player");
+                    "ON DUPLICATE KEY UPDATE player=VALUES(`player`), ip=VALUES(`ip`), hash=VALUES(`hash`)");
             preparedStatement.setString(1, player);
             preparedStatement.setString(2, ip);
             preparedStatement.setString(3, hash);
