@@ -39,6 +39,8 @@ public class Events implements Listener {
                             plugin.getPlayersInAuth().put(player.getName(), new AuthGUI(plugin, player, state));
                         }
                     }, 5L);
+                } else {
+                    plugin.executeAfterAuth(player);
                 }
             }
         });
