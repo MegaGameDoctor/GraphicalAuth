@@ -50,6 +50,12 @@ public class GuardEvents implements Listener {
     }
 
     @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        if (plugin.checkInteract(e.getPlayer()))
+            e.setCancelled(true);
+    }
+
+    @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player p) {
             if (plugin.checkInteract(p))
