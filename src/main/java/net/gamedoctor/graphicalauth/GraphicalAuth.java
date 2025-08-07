@@ -99,6 +99,6 @@ public class GraphicalAuth extends JavaPlugin {
     }
 
     public boolean checkInteract(Player player) {
-        return playersInAuth.containsKey(player.getName()) || (cfg.getStandaloneServerConfig().isEnable() && cfg.getStandaloneServerConfig().isAllowToInteract());
+        return playersInAuth.containsKey(player.getName()) || (cfg.getStandaloneServerConfig().isEnable() && !cfg.getStandaloneServerConfig().isAllowToInteract());
     }
 }
