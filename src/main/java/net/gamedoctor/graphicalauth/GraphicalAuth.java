@@ -42,6 +42,8 @@ public class GraphicalAuth extends JavaPlugin {
         this.getLogger().log(Level.INFO, "Completed!");
 
         this.getLogger().log(Level.INFO, "Performing other processes...");
+        if (cfg.getStandaloneServerConfig().isEnable())
+            Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getPluginManager().registerEvents(new Events(this), this);
         Bukkit.getPluginManager().registerEvents(new GuardEvents(this), this);
 
